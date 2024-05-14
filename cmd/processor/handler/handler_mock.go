@@ -36,13 +36,12 @@ func (m *Mockservice) EXPECT() *MockserviceMockRecorder {
 }
 
 // ProcessCsv mocks base method.
-func (m *Mockservice) ProcessCsv(arg0 context.Context) (*model.Summary, float64, error) {
+func (m *Mockservice) ProcessCsv(arg0 context.Context) (*model.Summary, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProcessCsv", arg0)
 	ret0, _ := ret[0].(*model.Summary)
-	ret1, _ := ret[1].(float64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // ProcessCsv indicates an expected call of ProcessCsv.

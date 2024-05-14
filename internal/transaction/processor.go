@@ -68,7 +68,6 @@ func (s *Service) getRecordsFromFile(ctx context.Context) ([][]string, error) {
 
 func (s *Service) ProcessCsv(ctx context.Context) (
 	summary *model.Summary,
-	runningBalance float64,
 	err error,
 ) {
 	const numWorkers = 5
@@ -78,6 +77,7 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 		wg              sync.WaitGroup
 		recordChan      = make(chan []string)
 		errChan         = make(chan error, 1)
+		runningBalance  float64
 	)
 
 	summary = &model.Summary{}
@@ -99,7 +99,7 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 			if err != nil {
 				log.WithContext(ctx).
 					WithFields(log.Fields{"event": "process_csv"}).
-					Errorf("fail sending email %s", err.Error())
+					Fatalf("fail sending email %s", err.Error())
 				return
 			}
 		}
@@ -140,7 +140,7 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 		case recordChan <- record:
 		case err := <-errChan:
 			close(recordChan)
-			return nil, 0, err
+			return nil, err
 		}
 	}
 	close(recordChan)
@@ -149,7 +149,7 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 	close(errChan)
 	for e := range errChan {
 		if e != nil {
-			return nil, 0, e
+			return nil, e
 		}
 	}
 
@@ -160,12 +160,12 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 		if err != nil {
 			log.WithContext(ctx).
 				WithFields(log.Fields{"event": "process_csv"}).
-				Errorf("fail to insert transactions: %s", err.Error())
+				Fatalf("fail to insert transactions: %s", err.Error())
 		}
 	}()
 
 	summary.RunningBalance = runningBalance
-	return summary, runningBalance, nil
+	return summary, nil
 }
 
 func processRecord(ctx context.Context, record []string, summary *model.Summary, monthlyGrouping map[string]int, runningBalance *float64) error {

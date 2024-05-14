@@ -41,7 +41,7 @@ func TestLambdaEvent(t *testing.T) {
 				handler.service.(*Mockservice).
 					EXPECT().
 					ProcessCsv(gomock.Any()).
-					Return(fields.summary, fields.endingBalance, nil)
+					Return(fields.summary, nil)
 			},
 			want: want{
 				statusCode: http.StatusOK,
@@ -57,7 +57,7 @@ func TestLambdaEvent(t *testing.T) {
 				handler.service.(*Mockservice).
 					EXPECT().
 					ProcessCsv(gomock.Any()).
-					Return(fields.summary, fields.endingBalance, errors.New("fail"))
+					Return(fields.summary, errors.New("fail"))
 			},
 			want: want{
 				statusCode: http.StatusInternalServerError,

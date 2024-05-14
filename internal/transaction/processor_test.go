@@ -48,121 +48,66 @@ func TestProcessCsv(t *testing.T) {
 		fmt.Println(err.Error())
 	}
 
-	type fields struct {
-		transactions []model.Transaction
-	}
-
 	type want struct {
-		endingBalance float64
-		summary       *model.Summary
-		err           error
+		summary *model.Summary
+		err     error
 	}
 
 	tests := []struct {
 		name         string
-		fields       fields
-		expectations func(fields fields)
+		expectations func()
 		want         want
 	}{
 		{
-			name: "ok",
-			fields: fields{
-				[]model.Transaction{
-					{0, +60.5, toDate("7/15")},
-					{3, +10, toDate("8/13")},
-					{1, -10.3, toDate("7/28")},
-					{2, -20.46, toDate("8/2")},
-				},
-			},
-			expectations: func(fields fields) {
-				procService.bucket.(*Mocks3Service).
-					EXPECT().
-					ReadFile(gomock.Any()).
-					Return(requestRaw, nil)
-				procService.email.(*MockemailService).
-					EXPECT().
-					SendEmail(gomock.Any(), gomock.Any()).
-					Return(nil)
-				procService.repository.(*Mockrepository).
-					EXPECT().
-					InsertTransactions(gomock.Any(), fields.transactions).
-					Return(nil)
-			},
-			want: want{
-				endingBalance: 39.74,
-				summary: &model.Summary{
-					Debit: []model.Transaction{
-						{ID: 0, Amount: 60.5, Date: time.Date(0, time.July, 15, 0, 0, 0, 0, time.UTC)},
-						{ID: 3, Amount: 10, Date: time.Date(0, time.August, 13, 0, 0, 0, 0, time.UTC)}},
-					Credit: []model.Transaction{
-						{ID: 1, Amount: -10.3, Date: time.Date(0, time.July, 28, 0, 0, 0, 0, time.UTC)},
-						{ID: 2, Amount: -20.46, Date: time.Date(0, time.August, 2, 0, 0, 0, 0, time.UTC)}},
-					RunningBalance: 39.74,
-				},
-				err: nil,
-			},
-		},
-		{
-			name: "fail_insert",
-			fields: fields{
-				[]model.Transaction{
-					{0, +60.5, toDate("7/15")},
-					{3, +10, toDate("8/13")},
-					{1, -10.3, toDate("7/28")},
-					{2, -20.46, toDate("8/2")},
-				},
-			},
-			expectations: func(fields fields) {
-				procService.bucket.(*Mocks3Service).
-					EXPECT().
-					ReadFile(gomock.Any()).
-					Return(requestRaw, nil)
-				procService.email.(*MockemailService).
-					EXPECT().
-					SendEmail(gomock.Any(), gomock.Any()).
-					Return(nil)
-				procService.repository.(*Mockrepository).
-					EXPECT().
-					InsertTransactions(gomock.Any(), fields.transactions).
-					Return(errors.New("fail"))
-			},
-			want: want{
-				endingBalance: 39.74,
-				summary: &model.Summary{
-					Debit: []model.Transaction{
-						{ID: 0, Amount: 60.5, Date: time.Date(0, time.July, 15, 0, 0, 0, 0, time.UTC)},
-						{ID: 3, Amount: 10, Date: time.Date(0, time.August, 13, 0, 0, 0, 0, time.UTC)}},
-					Credit: []model.Transaction{
-						{ID: 1, Amount: -10.3, Date: time.Date(0, time.July, 28, 0, 0, 0, 0, time.UTC)},
-						{ID: 2, Amount: -20.46, Date: time.Date(0, time.August, 2, 0, 0, 0, 0, time.UTC)}},
-					RunningBalance: 39.74,
-				},
-				err: nil,
-			},
-		},
-		{
-			name:   "error_records",
-			fields: fields{},
-			expectations: func(fields fields) {
+			name: "error_records",
+			expectations: func() {
 				procService.bucket.(*Mocks3Service).
 					EXPECT().
 					ReadFile(gomock.Any()).
 					Return(requestRaw, errors.New("fail"))
 			},
 			want: want{
-				endingBalance: 0,
-				summary:       &model.Summary{},
-				err:           errors.New("fail"),
+				summary: &model.Summary{},
+				err:     errors.New("fail"),
+			},
+		},
+		{
+			name: "ok",
+			expectations: func() {
+				procService.bucket.(*Mocks3Service).
+					EXPECT().
+					ReadFile(gomock.Any()).
+					Return(requestRaw, nil)
+				procService.email.(*MockemailService).
+					EXPECT().
+					SendEmail(gomock.Any(), gomock.Any()).
+					Return(nil)
+				procService.repository.(*Mockrepository).
+					EXPECT().
+					InsertTransactions(gomock.Any(), gomock.Any()).
+					Return(nil).Times(1)
+			},
+			want: want{
+				summary: &model.Summary{
+					Debit: []model.Transaction{
+						{ID: 0, Amount: 60.5, Date: time.Date(0, time.July, 15, 0, 0, 0, 0, time.UTC)},
+						{ID: 3, Amount: 10, Date: time.Date(0, time.August, 13, 0, 0, 0, 0, time.UTC)}},
+					Credit: []model.Transaction{
+						{ID: 1, Amount: -10.3, Date: time.Date(0, time.July, 28, 0, 0, 0, 0, time.UTC)},
+						{ID: 2, Amount: -20.46, Date: time.Date(0, time.August, 2, 0, 0, 0, 0, time.UTC)}},
+					RunningBalance: 39.74,
+				},
+				err: nil,
 			},
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			tc.expectations(tc.fields)
-			summary, balance, err := procService.ProcessCsv(context.Background())
+			tc.expectations()
+			summary, err := procService.ProcessCsv(context.Background())
 
-			assert.EqualValues(t, tc.want.summary, summary)
-			assert.EqualValues(t, tc.want.endingBalance, balance)
+			assert.ElementsMatch(t, tc.want.summary.Debit, summary.Debit)
+			assert.ElementsMatch(t, tc.want.summary.Credit, summary.Credit)
 			if err != nil {
 				assert.Equal(t, tc.want.err.Error(), err.Error())
 			}

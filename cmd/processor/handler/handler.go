@@ -31,6 +31,7 @@ func ProxyLambdaEvent() (events.APIGatewayProxyResponse, error) {
 
 func (h *Handler) LambdaEvent() (events.APIGatewayProxyResponse, error) {
 	ctx := context.Background()
+
 	summary, err := h.service.ProcessCsv(ctx)
 	if err != nil {
 		log.WithContext(ctx).
