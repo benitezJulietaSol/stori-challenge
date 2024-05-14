@@ -7,8 +7,6 @@ import (
 	"stori-challenge/internal/model"
 )
 
-//go:generate mockgen -source=repository.go -destination=repository_mock.go -package=transaction
-
 type Repository struct {
 	db orm.DB
 }
