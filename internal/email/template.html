@@ -1,0 +1,210 @@
+<table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="background: #ffffff">
+    <tr>
+        <td>
+            <table align="center" width="800px" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="left">
+                        <div style="
+              font-family: Arial;
+              font-style: normal;
+              font-weight: bold;
+              font-size: 18px;
+              line-height: 48px;
+              color: #070715;
+            ">Hi {{.Name}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <div style="
+              margin: 20px 0 0;
+              font-family: Arial;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 15px;
+              line-height: 22px;
+              color: #070715;
+            ">We were able to process the CSV for your account successfully.</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <div style="
+              margin: 20px 0 0;
+              font-family: Helvetica;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 15px;
+              line-height: 22px;
+              color: #070715;
+            ">
+                            Results:
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding: 20px 0 0">
+                        <table align="center" width="100%" border="1px" cellspacing="0" cellpadding="5px">
+                            <thead>
+                            <tr>
+                                <th style="
+                    font-family: Archivo, Arial, Helvetica, sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 22px;
+                    color: #070715;
+                  ">Status account</th>
+                                <th style="
+                    margin: 10px 0 0;
+                    font-family: Archivo, Arial, Helvetica, sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 22px;
+                    color: #070715;
+                  ">Count</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">Total balance</td>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">{{.EndingBalance}}</td>
+                            </tr>
+                            <tr>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">Average debit amount</td>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">{{.DebitAmount}}</td>
+                            </tr>
+                            <tr>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">Average credit amount</td>
+                                <td align="center" width="20%" style="
+                      margin: 10px 0 0;
+                      font-family: Archivo, Arial, Helvetica, sans-serif;
+                      font-style: normal;
+                      font-weight: normal;
+                      font-size: 14px;
+                      line-height: 22px;
+                      color: #070715;
+                    ">{{.CreditAmount}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <div style="
+              margin: 20px 0 0;
+              font-family: Helvetica;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 15px;
+              line-height: 22px;
+              color: #070715;
+            ">
+                            Monthly transactions:
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="padding: 20px 0 0">
+                        <table align="center" width="100%" border="1px" cellspacing="0" cellpadding="5px">
+                            <thead>
+                            <tr>
+                                <th style="
+                    font-family: Archivo, Arial, Helvetica, sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 22px;
+                    color: #070715;
+                  ">Month</th>
+                                <th style="
+                    margin: 10px 0 0;
+                    font-family: Archivo, Arial, Helvetica, sans-serif;
+                    font-style: normal;
+                    font-weight: bold;
+                    font-size: 14px;
+                    line-height: 22px;
+                    color: #070715;
+                  ">Transactions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                {{.MonthlyTransactions}}
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <div style="
+              margin: 40px 0 0;
+              font-family: Arial;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 15px;
+              line-height: 22px;
+              color: #070715;
+            ">Thanks!<br>The Stori Team</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <div style="
+              margin: 40px 0 20px;
+              border-top: 1px solid #DDDDED;
+            "></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        <img src="https://play-lh.googleusercontent.com/oXTAgpljdbV5LuAOt1NP9_JafUZe9BNl7pwQ01ndl4blYL4N4IQh4-n456P5l_hc1A=s96-rw" width="60px" />
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
