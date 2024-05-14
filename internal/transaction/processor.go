@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-//go:generate mockgen -source=service.go -destination=service_mock.go -package=transaction
+//go:generate mockgen -source=processor.go -destination=processor_mock.go -package=transaction
 
 const (
 	columnIndexId = iota
