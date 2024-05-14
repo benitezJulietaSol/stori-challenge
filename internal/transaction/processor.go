@@ -54,7 +54,9 @@ func (s *Service) getTransactions(ctx context.Context) ([]byte, error) {
 func (s *Service) getRecordsFromFile(ctx context.Context) ([][]string, error) {
 	file, err := s.getTransactions(ctx)
 	if err != nil {
-		log.WithContext(ctx).Errorf("failed to get transactions %s", err.Error())
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "records_from_file"}).
+			Errorf("failed to get transactions %s", err.Error())
 		return nil, err
 	}
 	reader := bytes.NewReader(file)
@@ -95,7 +97,9 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 				},
 			})
 			if err != nil {
-				log.WithContext(ctx).Error(err)
+				log.WithContext(ctx).
+					WithFields(log.Fields{"event": "process_csv"}).
+					Errorf("fail sending email %s", err.Error())
 				return
 			}
 		}
@@ -103,7 +107,6 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 
 	records, err := s.getRecordsFromFile(ctx)
 	if err != nil {
-		log.WithContext(ctx).Error(err)
 		return
 	}
 
@@ -155,7 +158,9 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 		transactions = append(transactions, summary.Credit...)
 		err := s.repository.InsertTransactions(ctx, transactions)
 		if err != nil {
-			log.WithContext(ctx).Error("Fail to insert transactions, error: %s", err.Error())
+			log.WithContext(ctx).
+				WithFields(log.Fields{"event": "process_csv"}).
+				Errorf("fail to insert transactions: %s", err.Error())
 		}
 	}()
 
@@ -166,31 +171,43 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 func processRecord(ctx context.Context, record []string, summary *model.Summary, monthlyGrouping map[string]int, runningBalance *float64) error {
 	const bitSize = 64
 
-	log.WithContext(ctx).Infof("Parsing row: %v", record)
+	log.WithContext(ctx).
+		WithFields(log.Fields{"event": "process_record"}).
+		Infof("parsing row: %v", record)
 
 	id, err := strconv.ParseFloat(record[columnIndexId], bitSize)
 	if err != nil {
-		log.WithContext(ctx).Errorf("failed to parse date %s:", record[columnIndexDate])
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "process_record"}).
+			Errorf("failed to parse date %s:", record[columnIndexDate])
 		return err
 	}
 
 	// Parse date
 	date, err := time.Parse("1/2", record[columnIndexDate])
 	if err != nil {
-		log.WithContext(ctx).Errorf("failed to parse date %s", record[columnIndexDate])
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "process_record"}).
+			Errorf("failed to parse date %s:", record[columnIndexDate])
 		return err
 	}
 
-	log.WithContext(ctx).Infof("Parsed date: %v", date)
+	log.WithContext(ctx).
+		WithFields(log.Fields{"event": "process_record"}).
+		Infof("Parsed date: %v", date)
 
 	// Parse amount. debit is negative and credit is positive
 	amount, err := strconv.ParseFloat(record[columnIndexAmount], bitSize)
 	if err != nil {
-		log.WithContext(ctx).Errorf("failed to parse amount %s", record[columnIndexAmount])
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "process_record"}).
+			Errorf("failed to parse amount %s", record[columnIndexAmount])
 		return err
 	}
 
-	log.WithContext(ctx).Infof("Parsed amount: %v", amount)
+	log.WithContext(ctx).
+		WithFields(log.Fields{"event": "process_record"}).
+		Infof("Parsed amount: %v", amount)
 
 	monthlyGrouping[date.Month().String()] = monthlyGrouping[date.Month().String()] + 1
 

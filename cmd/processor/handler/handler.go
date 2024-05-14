@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"stori-challenge/internal/model"
 )
@@ -15,7 +16,7 @@ type Handler struct {
 }
 
 type service interface {
-	ProcessCsv(context.Context) (*model.Summary, float64, error)
+	ProcessCsv(context.Context) (*model.Summary, error)
 }
 
 func NewHandler(service service) *Handler {
@@ -30,20 +31,30 @@ func ProxyLambdaEvent() (events.APIGatewayProxyResponse, error) {
 
 func (h *Handler) LambdaEvent() (events.APIGatewayProxyResponse, error) {
 	ctx := context.Background()
-	_, runningBalance, err := h.service.ProcessCsv(ctx)
+	summary, err := h.service.ProcessCsv(ctx)
 	if err != nil {
-		if err != nil {
-			return events.APIGatewayProxyResponse{
-				StatusCode: http.StatusInternalServerError,
-				Body:       err.Error(),
-			}, err
-		}
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "lambda_event"}).
+			Error(err)
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       err.Error(),
+		}, err
 	}
 
-	fmt.Println(runningBalance)
+	body, err := json.Marshal(summary)
+	if err != nil {
+		log.WithContext(ctx).
+			WithFields(log.Fields{"event": "lambda_event"}).
+			Error(err)
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusInternalServerError,
+			Body:       err.Error(),
+		}, err
+	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       "Successful",
+		Body:       string(body),
 		StatusCode: http.StatusOK,
 	}, nil
 }
