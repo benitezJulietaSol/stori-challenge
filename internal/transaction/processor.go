@@ -66,6 +66,9 @@ func (s *Service) getRecordsFromFile(ctx context.Context) ([][]string, error) {
 	return csvReader.ReadAll()
 }
 
+// ProcessCsv it is in charge of obtaining the csv from the bucket, processing the transactions and
+// sending the corresponding email with the results.
+// the processed transactions are stored in the database as a history.
 func (s *Service) ProcessCsv(ctx context.Context) (
 	summary *model.Summary,
 	err error,
