@@ -1,10 +1,10 @@
 package transaction
 
 import (
-	"awesomeProject2/internal/integrations/db"
-	"awesomeProject2/internal/model"
 	"context"
 	"github.com/go-pg/pg/v10/orm"
+	"stori-challenge/internal/integrations/db"
+	"stori-challenge/internal/model"
 )
 
 type Repository struct {

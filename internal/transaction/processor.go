@@ -1,13 +1,13 @@
 package transaction
 
 import (
-	"awesomeProject2/internal/email"
-	model "awesomeProject2/internal/model"
 	"bytes"
 	"context"
 	"encoding/csv"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"stori-challenge/internal/email"
+	model "stori-challenge/internal/model"
 	"strconv"
 	"time"
 )

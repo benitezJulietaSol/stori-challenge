@@ -1,4 +1,4 @@
-module awesomeProject2
+module stori-challenge
 
 go 1.18
 

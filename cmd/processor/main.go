@@ -1,13 +1,10 @@
 package main
 
 import (
-	"awesomeProject2/cmd/processor/handler"
-	"fmt"
+	"github.com/aws/aws-lambda-go/lambda"
+	"stori-challenge/cmd/processor/handler"
 )
 
 func main() {
-
-	handler.LambdaEvent()
-	fmt.Println("LISTO")
-	//lambda.Start(handler.LambdaEvent)
+	lambda.Start(handler.LambdaEvent)
 }

@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"awesomeProject2/internal/email"
-	"awesomeProject2/internal/integrations/aws/s3"
-	"awesomeProject2/internal/integrations/aws/ses"
-	"awesomeProject2/internal/integrations/db"
-	"awesomeProject2/internal/model"
-	"awesomeProject2/internal/transaction"
 	"context"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/joho/godotenv"
 	"net/http"
 	"os"
+	"stori-challenge/internal/email"
+	"stori-challenge/internal/integrations/aws/s3"
+	"stori-challenge/internal/integrations/aws/ses"
+	"stori-challenge/internal/integrations/db"
+	"stori-challenge/internal/model"
+	"stori-challenge/internal/transaction"
 )
 
 //go:generate mockgen -source=handler.go -destination=handler_mock.go -package=handler

@@ -1,12 +1,12 @@
 package email
 
 import (
-	"awesomeProject2/internal/integrations/aws/ses"
-	"awesomeProject2/internal/model"
 	"bytes"
 	"context"
 	_ "embed"
 	"html/template"
+	"stori-challenge/internal/integrations/aws/ses"
+	"stori-challenge/internal/model"
 	"strconv"
 )
 
