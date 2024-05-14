@@ -1,9 +1,8 @@
-package main
+package handler
 
 import (
 	"github.com/joho/godotenv"
 	"os"
-	"stori-challenge/cmd/processor/handler"
 	"stori-challenge/internal/email"
 	"stori-challenge/internal/integrations/aws/s3"
 	"stori-challenge/internal/integrations/aws/ses"
@@ -23,16 +22,16 @@ func buildConfig() (map[string]string, error) {
 	return config, nil
 }
 
-func session(configs map[string]string) *handler.Handler {
+func session(configs map[string]string) *Handler {
 	db := db.InitPostgres(configs["host"], configs["database"], configs["user"], configs["password"])
 	repository := transaction.NewRepository(db)
 	emailService := email.NewService(ses.NewService(configs))
 	s3Service := s3.NewS3Service(configs)
 
-	return handler.NewHandler(transaction.NewService(emailService, s3Service, repository))
+	return NewHandler(transaction.NewService(emailService, s3Service, repository))
 }
 
-func config() *handler.Handler {
+func config() *Handler {
 	credentials, err := buildConfig()
 	if err != nil {
 		if err != nil {

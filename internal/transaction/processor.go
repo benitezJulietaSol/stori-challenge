@@ -155,7 +155,7 @@ func (s *Service) ProcessCsv(ctx context.Context) (
 		transactions = append(transactions, summary.Credit...)
 		err := s.repository.InsertTransactions(ctx, transactions)
 		if err != nil {
-			log.WithContext(ctx).Error("insert transactions")
+			log.WithContext(ctx).Error("Fail to insert transactions, error: %s", err.Error())
 		}
 	}()
 

@@ -24,6 +24,10 @@ func NewHandler(service service) *Handler {
 	}
 }
 
+func ProxyLambdaEvent() (events.APIGatewayProxyResponse, error) {
+	return config().LambdaEvent()
+}
+
 func (h *Handler) LambdaEvent() (events.APIGatewayProxyResponse, error) {
 	ctx := context.Background()
 	_, runningBalance, err := h.service.ProcessCsv(ctx)
