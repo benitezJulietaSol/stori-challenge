@@ -27,7 +27,7 @@ password: ***
 
 - create a PostgreSQL instance and run the script pg_migrations setup.sql
 ```
-docker run --name stori3 -e POSTGRES_PASSWORD=admin -d -p 5432:5432 postgres
+docker run --name stori -e POSTGRES_PASSWORD=admin -d -p 5432:5432 postgres
 ```
 
 ngrok config to create the proxy revert:
