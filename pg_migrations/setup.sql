@@ -5,7 +5,7 @@ CREATE USER postgres WITH PASSWORD 'admin';
 create table transactions
 (
     id         integer                 not null,
-    amount     integer                 not null,
+    amount     float8                 not null,
     date       varchar                 not null,
     created_at timestamp default now() not null,
     primary key (id, created_at)

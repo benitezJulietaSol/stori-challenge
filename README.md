@@ -55,5 +55,5 @@ zip deployment.zip bootstrap .env
 
 
 [Solution Diagram](docs/solution.png)
-[Transactions history](docs/db.png)
+[Transactions history](docs/transactions.png)
 [Email](docs/email.png)
